@@ -61,18 +61,18 @@ class JsonPropertyNameMapperTest {
 				+ "\"Name\":\"AAA\","
 				+ "\"FundInfList\":["
 				+ "{\"PortCd\":\"10000\",\"CurCd\":\"USD\",\"EvalDt\":\"20210726\"},"
-				+ "{\"PortCd\":\"10001\",\"CurCd\":\"JPY\"},"
+				+ "{\"PortCd\":\"10001\",\"CurCd\":\"JPY\"}"
 				+ "]"
 				+ "}";
 		String actual = target.renameProperties(json);
 		assertEquals(
 				"{"
-						+ "\"Name\":\"AAA\","
-						+ "\"FundInfs\":["
-						+ "{\"Fund\":\"10000\",\"CurCd\":\"USD\",\"RtEvalDt\":\"20210726\"},"
-						+ "{\"Fund\":\"10001\",\"CurCd\":\"JPY\"},"
-						+ "]"
-						+ "}",
+				+ "\"Name\":\"AAA\","
+				+ "\"FundInfs\":["
+				+ "{\"CurCd\":\"USD\",\"RtEvalDt\":\"20210726\",\"Fund\":\"10000\"},"
+				+ "{\"CurCd\":\"JPY\",\"Fund\":\"10001\"}"
+				+ "]"
+				+ "}",
 				actual);
 	}
 
@@ -97,8 +97,8 @@ class JsonPropertyNameMapperTest {
 		String actual = target.renameProperties(json);
 		assertEquals(
 				"{"
-				+ "\"NameJP\":\"t-eguchi\","
-				+ "\"Nicknames\":[\"take\",\"egu\"]"
+				+ "\"Nicknames\":[\"take\",\"egu\"],"
+				+ "\"NameJp\":\"t-eguchi\""
 				+ "}",
 				actual);
 	}

@@ -3,6 +3,7 @@ package com.egu.springboot.sample.util;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -62,6 +63,14 @@ public class CollectionUtil {
 		}
 
 		/**
+		 * 子供を持っているかを判別します。
+		 * @return
+		 */
+		public boolean hasChildren() {
+			return !children.isEmpty();
+		}
+
+		/**
 		 * ルートノードかどうか
 		 * @return
 		 */
@@ -117,24 +126,62 @@ public class CollectionUtil {
 		 * @return
 		 */
 		public int getMaxDepth() {
-			int maxDepth = getMaxDepth(getChildren());
-			return maxDepth + 1;
-		}
-
-		/** ノードコレクションから最も大きい深さを取得します。 */
-		private int getMaxDepth(List<Node<T>> nodes) {
-			if (nodes.isEmpty())
-				return 0;
-
+			// 葉の部分のみを取得
+			List<Node<T>> leafs = getLeafs();
 			int maxDepth = 1;
-			for (var node : nodes) {
-				int depth = getMaxDepth(node.getChildren());
+			for (var leaf : leafs) {
+				int depth = getGenerationDiff(leaf) + 1;
 				if (maxDepth < depth) {
 					maxDepth = depth;
 				}
 			}
-
 			return maxDepth;
+		}
+
+		/** 指定したノードとの世代差を計算します */
+		private int getGenerationDiff(Node<T> node) {
+			int count = 0;
+			Node<T> current = node;
+			while (current != this) {
+				if (current == null)
+					throw new IllegalArgumentException(node + " is not children.");
+				count++;
+				current = current.getParent();
+			}
+			return count;
+		}
+
+		/**
+		 * 子供を持たない葉の要素のみを取得します。
+		 * @return
+		 */
+		public List<Node<T>> getLeafs() {
+			return getAllNodes().stream()
+					.filter(node -> !node.hasChildren())
+					.collect(Collectors.toList());
+		}
+
+		/**
+		 * 全てのノードを階層によらず収集します。
+		 * @return
+		 */
+		public List<Node<T>> getAllNodes() {
+			List<Node<T>> nodes = new ArrayList<>();
+			addAllNodes(nodes, this);
+			return nodes;
+		}
+
+		/** 全てのノードを階層によらず追加します。 */
+		private void addAllNodes(List<Node<T>> nodes, Node<T> node) {
+			nodes.add(node);
+			for (var child : node.getChildren()) {
+				addAllNodes(nodes, child);
+			}
+		}
+
+		@Override
+		public String toString() {
+			return "value = " + value + ", children(" + children.size() + ")";
 		}
 	}
 }

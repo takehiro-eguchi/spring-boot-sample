@@ -62,7 +62,7 @@ public class JsonPropertyNameMapper {
 				// 末尾の場合はtoを設定
 				if (index == lastIndex) {
 					var mappedName = currentNode.getValue();
-					mappedName.setTo(to);
+					mappedName.setTo(toNames[index]);
 				}
 			}
 		});
@@ -118,7 +118,8 @@ public class JsonPropertyNameMapper {
 	}
 
 	/** JSONのリネームを行います */
-	private void renameProperties(JSONObject jsonObject, List<Node<MappedName>> targetNodes) {
+	private void renameProperties(
+			JSONObject jsonObject, List<Node<MappedName>> targetNodes) {
 		for (var targetNode : targetNodes) {
 			var routeNodes = targetNode.getRouteNodes();
 			Object current = jsonObject;
@@ -171,6 +172,9 @@ public class JsonPropertyNameMapper {
 		if (jsonObject == null)
 			return;
 
+		if (jsonObject.isNull(from))
+			return;
+
 		try {
 			Object targetObject = jsonObject.get(from);
 			jsonObject.remove(from);
@@ -212,7 +216,9 @@ public class JsonPropertyNameMapper {
 	private Object getObjectList(JSONArray array) {
 		List<JSONObject> objectList = new ArrayList<>();
 		for (int index = 0; index < array.length(); index++) {
-			JSONObject jsonObject = JacksonUtil.getJsonObject(array, index);
+			JSONObject jsonObject = null;
+			if (!array.isNull(index))
+				jsonObject = JacksonUtil.getJsonObject(array, index);
 			objectList.add(jsonObject);
 		}
 		return objectList;	}
