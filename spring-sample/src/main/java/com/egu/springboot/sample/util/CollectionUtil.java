@@ -100,7 +100,7 @@ public class CollectionUtil {
 
 		/** 対象のノードから指定する深さに該当するノードを収集します */
 		private void addDepthNode(List<Node<T>> collectList, Node<T> target, int depth) {
-			if (depth == 0) {
+			if (depth == 1) {
 				collectList.add(target);
 				return;
 			}
@@ -110,6 +110,31 @@ public class CollectionUtil {
 			for (var child : target.getChildren()) {
 				addDepthNode(collectList, child, depth);
 			}
+		}
+
+		/**
+		 * 最大の深さを取得します。
+		 * @return
+		 */
+		public int getMaxDepth() {
+			int maxDepth = getMaxDepth(getChildren());
+			return maxDepth + 1;
+		}
+
+		/** ノードコレクションから最も大きい深さを取得します。 */
+		private int getMaxDepth(List<Node<T>> nodes) {
+			if (nodes.isEmpty())
+				return 0;
+
+			int maxDepth = 1;
+			for (var node : nodes) {
+				int depth = getMaxDepth(node.getChildren());
+				if (maxDepth < depth) {
+					maxDepth = depth;
+				}
+			}
+
+			return maxDepth;
 		}
 	}
 }
