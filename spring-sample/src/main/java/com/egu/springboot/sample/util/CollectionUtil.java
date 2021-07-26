@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -19,7 +20,8 @@ public class CollectionUtil {
 	 * @author t-eguchi
 	 * @param <T>
 	 */
-	public class Node<T> {
+	@NoArgsConstructor
+	public static class Node<T> {
 
 		/** 値 */
 		@Getter
@@ -33,6 +35,14 @@ public class CollectionUtil {
 
 		/** 子供のコレクション */
 		private final List<Node<T>> children = new ArrayList<>();
+
+		/**
+		 * 値を渡すことによりインスタンスを生成します。
+		 * @param value
+		 */
+		public Node(T value) {
+			this.value = value;
+		}
 
 		/**
 		 * 子供のコレクションを取得します。
