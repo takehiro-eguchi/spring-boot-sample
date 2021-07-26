@@ -11,7 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
-import com.egu.springboot.sample.service.SampleBLService.BusinessLogic;
+import com.egu.springboot.sample.service.BusinessLogic.BusinessLogicUtil;
 
 import lombok.AllArgsConstructor;
 
@@ -91,7 +91,8 @@ public class BLProxyService {
 				if (businessLogic == null)
 					continue;
 
-				if (businessLogic.id().equals(serviceID)) {
+				String businessLogicID = BusinessLogicUtil.getId(businessLogic);
+				if (businessLogicID.equals(serviceID)) {
 					executableSet = new ExecutableSet(bean, method);
 					break;
 				}

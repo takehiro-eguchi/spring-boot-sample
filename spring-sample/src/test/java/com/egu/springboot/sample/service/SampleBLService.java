@@ -1,28 +1,18 @@
 package com.egu.springboot.sample.service;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-import org.springframework.core.annotation.AliasFor;
 import org.springframework.stereotype.Service;
 
 import lombok.Builder;
 import lombok.Data;
 
+/**
+ * サンプル用のサービスです。
+ * @author t-eguchi
+ */
 @Service
 public class SampleBLService {
 
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.METHOD)
-	@interface BusinessLogic {
-		@AliasFor("value")
-		String id() default "";
-		@AliasFor("id")
-		String value() default "";
-	}
-
+	/** サンプル用のリクエストです */
 	@Data
 	@Builder
 	public static class SampleRequest {
@@ -30,6 +20,7 @@ public class SampleBLService {
 		private String name;
 	}
 
+	/** サンプル用のレスポンスです */
 	@Data
 	@Builder
 	public static class SampleResponse {
@@ -38,6 +29,7 @@ public class SampleBLService {
 		private String memo;
 	}
 
+	/** テストメソッド1 */
 	@BusinessLogic("Get")
 	public SampleResponse get(SampleRequest request) {
 		return SampleResponse.builder()
@@ -47,6 +39,7 @@ public class SampleBLService {
 				.build();
 	}
 
+	/** テストメソッド2 */
 	@BusinessLogic(id = "Post")
 	public SampleResponse post(SampleRequest request) {
 		return SampleResponse.builder()
